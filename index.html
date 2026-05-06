@@ -229,8 +229,6 @@
       line-height: 1.7;
     }
 
-    footer .name { color: var(--ds-text); font-weight: 500; }
-
     footer a {
       color: var(--p-emphasis);
       text-decoration: none;
@@ -238,6 +236,18 @@
     }
 
     footer a:hover { color: var(--ds-text); }
+
+    footer a.name {
+      color: var(--ds-text);
+      font-weight: 500;
+      border-bottom: 1px solid transparent;
+      transition: border-color 150ms ease, color 150ms ease;
+    }
+
+    footer a.name:hover {
+      color: var(--ds-text-strong);
+      border-bottom-color: var(--p-emphasis);
+    }
 
     .copy {
       font-family: var(--font-label);
@@ -318,7 +328,7 @@
 
   <footer>
     <p>
-      <span class="name">Marcel Serrano</span> — fundador. Barcelona. 20 anos no manual, agora codificados em sistema.
+      <a class="name" href="https://www.marcelserrano.com" target="_blank" rel="noopener">Marcel Serrano</a> — fundador. Barcelona. 20 anos no manual, agora codificados em sistema.
     </p>
     <p>
       <a href="https://fronteirista.substack.com/" target="_blank" rel="noopener">Substack</a>
