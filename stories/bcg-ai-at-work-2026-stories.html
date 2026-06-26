@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stories · BCG AI at Work 2026</title>
+<style>
+  :root{
+    --bg:#070b14;
+    --bg2:#0c1424;
+    --cyan:#22e0ff;
+    --cyan-soft:#7af0ff;
+    --amber:#ffb020;
+    --amber-soft:#ffd27a;
+    --ink:#eaf4ff;
+    --muted:#8aa0bd;
+    --line:rgba(122,240,255,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#05080f;
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    display:flex;flex-direction:column;align-items:center;gap:32px;
+    padding:40px 0;
+  }
+  .toolbar{
+    color:var(--muted);font-size:14px;text-align:center;line-height:1.6;
+    max-width:1080px;padding:0 24px;
+  }
+  .toolbar b{color:var(--cyan-soft);}
+
+  /* Each story = 1080x1920 (9:16) */
+  .story{
+    position:relative;width:1080px;height:1920px;overflow:hidden;
+    background:radial-gradient(120% 80% at 80% -10%,rgba(34,224,255,.10),transparent 55%),
+               radial-gradient(120% 80% at -10% 110%,rgba(255,176,32,.10),transparent 55%),
+               linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%);
+    color:var(--ink);
+    padding:120px 96px 140px;
+    display:flex;flex-direction:column;
+    box-shadow:0 30px 90px rgba(0,0,0,.6);
+  }
+  /* subtle HUD grid */
+  .story::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),
+                     linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:90px 90px;opacity:.35;
+    mask-image:radial-gradient(120% 120% at 50% 30%,#000 35%,transparent 80%);
+  }
+  .story > *{position:relative;z-index:1;}
+
+  .brandbar{display:flex;align-items:center;justify-content:space-between;
+    font-size:24px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+  .brandbar .dot{width:14px;height:14px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 24px var(--cyan);display:inline-block;margin-right:14px;vertical-align:middle;}
+  .ms{color:var(--ink);font-weight:700;letter-spacing:.22em;}
+
+  .kicker{margin-top:90px;font-size:30px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--cyan);}
+  .kicker.amber{color:var(--amber);}
+
+  h1{font-size:108px;line-height:1.02;font-weight:800;letter-spacing:-.02em;margin-top:28px;}
+  h2{font-size:78px;line-height:1.06;font-weight:800;letter-spacing:-.01em;margin-top:24px;}
+  .lede{font-size:38px;line-height:1.45;color:var(--muted);margin-top:40px;max-width:840px;}
+
+  .spacer{flex:1;}
+
+  .stat{font-size:240px;font-weight:800;line-height:.9;letter-spacing:-.04em;
+    color:var(--cyan);text-shadow:0 0 60px rgba(34,224,255,.35);}
+  .stat.amber{color:var(--amber);text-shadow:0 0 60px rgba(255,176,32,.35);}
+  .stat-label{font-size:46px;line-height:1.3;font-weight:600;margin-top:18px;max-width:840px;}
+  .stat-sub{font-size:30px;color:var(--muted);margin-top:24px;}
+
+  .rows{display:flex;flex-direction:column;gap:34px;margin-top:60px;}
+  .row{display:flex;align-items:baseline;gap:34px;border-bottom:1px solid var(--line);padding-bottom:28px;}
+  .row .num{font-size:88px;font-weight:800;color:var(--cyan);min-width:230px;line-height:1;}
+  .row .num.amber{color:var(--amber);}
+  .row .txt{font-size:38px;line-height:1.3;color:var(--ink);}
+
+  .vs{display:flex;align-items:stretch;gap:40px;margin-top:80px;}
+  .vs .card{flex:1;border:1px solid var(--line);border-radius:28px;padding:56px 44px;
+    background:rgba(255,255,255,.02);}
+  .vs .big{font-size:130px;font-weight:800;line-height:1;}
+  .vs .c1 .big{color:var(--cyan);} .vs .c2 .big{color:#5b6b82;}
+  .vs .cap{font-size:34px;color:var(--muted);margin-top:24px;line-height:1.3;}
+
+  .quote{font-size:62px;line-height:1.25;font-weight:700;letter-spacing:-.01em;margin-top:30px;}
+  .quote .hl{color:var(--cyan);}
+  .byline{font-size:32px;color:var(--muted);margin-top:48px;}
+
+  ol.q{margin-top:50px;list-style:none;counter-reset:q;display:flex;flex-direction:column;gap:44px;}
+  ol.q li{counter-increment:q;font-size:44px;line-height:1.3;padding-left:120px;position:relative;}
+  ol.q li::before{content:counter(q);position:absolute;left:0;top:-6px;
+    width:80px;height:80px;border-radius:50%;border:2px solid var(--amber);color:var(--amber);
+    display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;}
+
+  .footer{font-size:28px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+  .footer .src{max-width:620px;line-height:1.4;}
+  .pill{font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--bg);
+    background:var(--cyan);padding:14px 28px;border-radius:999px;font-weight:800;}
+  .pill.amber{background:var(--amber);}
+  .pageno{position:absolute;left:0;right:0;bottom:56px;text-align:center;font-size:24px;letter-spacing:.3em;color:var(--muted);z-index:1;}
+
+  @media print{
+    body{background:#fff;gap:0;padding:0;}
+    .toolbar{display:none;}
+    .story{box-shadow:none;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <b>Stories · BCG AI at Work 2026</b> — 9 slides no formato 1080×1920 (9:16).<br>
+    Para exportar: abra no navegador e tire screenshot de cada slide, ou use <b>Imprimir → Salvar como PDF</b> (cada story vira uma página).
+  </div>
+
+  <!-- 1 · CAPA / GANCHO -->
+  <section class="story">
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>IA · GESTÃO</span></div>
+    <div class="kicker">Estudo BCG · 4ª edição</div>
+    <h1>A IA já chegou.<br>A gestão, <span style="color:var(--amber)">não.</span></h1>
+    <p class="lede">O uso de inteligência artificial explodiu nas empresas. O problema agora não é a tecnologia — é o que a liderança faz (ou deixa de fazer) com ela.</p>
+    <div class="spacer"></div>
+    <div class="footer"><span class="src">Pesquisa AI at Work · Boston Consulting Group · jun/2026</span><span class="pill">arrasta →</span></div>
+  </section>
+
+  <!-- 2 · O ESTUDO -->
+  <section class="story">
+    <div class="pageno">02 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>O ESTUDO</span></div>
+    <div class="kicker">De onde vêm os números</div>
+    <h2>A maior radiografia da IA no trabalho</h2>
+    <div class="rows">
+      <div class="row"><span class="num">11,7<span style="font-size:46px">mil</span></span><span class="txt">profissionais ouvidos</span></div>
+      <div class="row"><span class="num">14</span><span class="txt">mercados no mundo todo</span></div>
+      <div class="row"><span class="num">4ª</span><span class="txt">edição anual da pesquisa do BCG</span></div>
+    </div>
+    <div class="spacer"></div>
+    <p class="lede">A conclusão é direta: <b style="color:var(--cyan)">o gargalo da IA migrou da tecnologia para a gestão.</b></p>
+  </section>
+
+  <!-- 3 · ADOÇÃO -->
+  <section class="story">
+    <div class="pageno">03 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>ADOÇÃO</span></div>
+    <div class="kicker">O uso disparou</div>
+    <div class="spacer"></div>
+    <div class="stat">74%</div>
+    <div class="stat-label">dos profissionais de linha de frente já usam IA toda semana</div>
+    <div class="stat-sub">↑ +23 pontos percentuais em relação a 2025</div>
+    <div class="spacer"></div>
+    <p class="lede">O Sul Global — <b>Brasil, Índia, Oriente Médio e África do Sul</b> — puxa a adoção e supera a média mundial. EUA, França e Itália ficam abaixo.</p>
+  </section>
+
+  <!-- 4 · ECONOMIA DE TEMPO -->
+  <section class="story">
+    <div class="pageno">04 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>GANHO DE TEMPO</span></div>
+    <div class="kicker">A IA devolve horas</div>
+    <h2>42% economizam 8h+ por semana</h2>
+    <p class="lede">Um dia inteiro de trabalho de volta. Em algumas áreas, o ganho é ainda maior:</p>
+    <div class="rows">
+      <div class="row"><span class="num">60%</span><span class="txt">em Marketing</span></div>
+      <div class="row"><span class="num">53%</span><span class="txt">em TI</span></div>
+      <div class="row"><span class="num">50%</span><span class="txt">em RH</span></div>
+    </div>
+    <div class="spacer"></div>
+    <p class="lede">Mas… esse tempo está sendo bem usado? 👀</p>
+  </section>
+
+  <!-- 5 · O GARGALO -->
+  <section class="story">
+    <div class="pageno">05 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>O GARGALO</span></div>
+    <div class="kicker amber">O dado mais desconfortável</div>
+    <div class="spacer"></div>
+    <div class="stat amber">66%</div>
+    <div class="stat-label">não recebem nenhum direcionamento sobre como usar o tempo economizado</div>
+    <div class="stat-sub">Mais da metade simplesmente perde esse tempo — ele não vira trabalho estratégico.</div>
+    <div class="spacer"></div>
+    <p class="lede">A IA libera horas. A empresa que não decide o que fazer com elas joga o ganho no lixo.</p>
+  </section>
+
+  <!-- 6 · ESTRATÉGIA VS FERRAMENTA -->
+  <section class="story">
+    <div class="pageno">06 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>A VIRADA</span></div>
+    <div class="kicker">Estratégia &gt; ferramenta</div>
+    <h2>O que realmente move o resultado</h2>
+    <div class="vs">
+      <div class="card c1"><div class="big">+25</div><div class="cap">pontos percentuais de impacto<br>com <b style="color:var(--cyan)">estratégia clara</b></div></div>
+      <div class="card c2"><div class="big">+5</div><div class="cap">pontos percentuais só com<br><b>ferramentas melhores</b>, sem direção</div></div>
+    </div>
+    <div class="spacer"></div>
+    <p class="quote">"O cenário exige uma <span class="hl">revolução gerencial</span>, não apenas tecnológica."</p>
+    <div class="byline">— V. Beauchene & S. Duranton, BCG X</div>
+  </section>
+
+  <!-- 7 · AGENTES -->
+  <section class="story">
+    <div class="pageno">07 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>AGENTES DE IA</span></div>
+    <div class="kicker">O uso cresce, a governança não</div>
+    <h2>O próximo salto já assusta</h2>
+    <div class="rows">
+      <div class="row"><span class="num">61%</span><span class="txt">acham que agentes farão metade do trabalho em 3 anos</span></div>
+      <div class="row"><span class="num amber">52%</span><span class="txt">ainda entendem pouco sobre o que são esses agentes</span></div>
+      <div class="row"><span class="num amber">½</span><span class="txt">das empresas não têm regras pra times de humanos + IA</span></div>
+    </div>
+    <div class="spacer"></div>
+    <p class="lede">No Brasil, <b>18%</b> já usam agentes em fluxos reais — contra 13% da média global.</p>
+  </section>
+
+  <!-- 8 · PARADOXO DA ALEGRIA -->
+  <section class="story">
+    <div class="pageno">08 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>PARADOXO DA ALEGRIA</span></div>
+    <div class="kicker amber">Melhor e mais pesado ao mesmo tempo</div>
+    <h2>O "joy paradox"</h2>
+    <div class="vs">
+      <div class="card c1"><div class="big">67%</div><div class="cap">relatam <b style="color:var(--cyan)">mais satisfação</b> no trabalho</div></div>
+      <div class="card c2"><div class="big" style="color:var(--amber)">48%</div><div class="cap">das <b>lideranças</b> sentem mais estresse mental (41% entre trabalhadores)</div></div>
+    </div>
+    <div class="spacer"></div>
+    <p class="lede"><b>72%</b> veem mudança nas habilidades exigidas — mas só <b style="color:var(--amber)">36%</b> receberam capacitação adequada.</p>
+  </section>
+
+  <!-- 9 · CTA -->
+  <section class="story">
+    <div class="pageno">09 / 09</div>
+    <div class="brandbar"><span><span class="dot"></span>MS <span class="ms">CREATIVE</span></span><span>PRA LEVAR</span></div>
+    <div class="kicker amber">3 perguntas antes da próxima licença</div>
+    <h2>O que CEOs precisam responder</h2>
+    <ol class="q">
+      <li>Qual <b>problema de negócio</b> a IA está de fato resolvendo?</li>
+      <li>Como o <b>tempo economizado</b> vai ser reaproveitado?</li>
+      <li><b>Quem responde</b> pelo que um agente de IA decide?</li>
+    </ol>
+    <div class="spacer"></div>
+    <p class="lede">Sem resposta, o gráfico de adoção sobe — e o de valor, não.</p>
+    <div class="footer"><span class="src">Fonte: BCG · AI at Work 2026 · via Rapadura Tech</span><span class="pill amber">@mscreative</span></div>
+  </section>
+
+</body>
+</html>
